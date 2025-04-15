@@ -9,12 +9,8 @@ const adminrouter = require('./router/admin-router');
 const connectDB = require('./utils/db');
 const errorMiddleware = require('./middleware/error-middleware');
 
-var corsOptions = {
-    origin: "http://127.0.0.1:5173",
-    methods: "GET, POST, DELETE, PATCH, HEAD",
-    Credential: true,
-  };
-app.use(cors(corsOptions));
+
+app.use(cors);  
 app.use(express.json());
 
 app.use("/api/auth", authRoute); 
