@@ -1,0 +1,7 @@
+.fcontainer{
+    display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;     /* Center vertically */
+  height: 10vh; 
+  background-color:var(--btn-color);
+}

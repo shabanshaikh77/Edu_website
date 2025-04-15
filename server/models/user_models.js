@@ -21,10 +21,10 @@ const jwt = require("jsonwebtoken");
   password:{
     type : String,
     require : true,
-  },
+  }, 
   isAdmin :{
     type : Boolean,
-    require : false,
+    default : false,
   },
 });
 

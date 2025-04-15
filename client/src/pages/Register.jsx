@@ -1,5 +1,10 @@
 import { useState } from "react";
+import { useNavigate} from "react-router-dom";
 import registerImage from "../images/register.png";
+import {useAuth} from "../store/auth";
+import {  toast } from 'react-toastify';
+
+
 export const Register = () => {
  const [user, setUser] = useState({
      username : "",
@@ -8,6 +13,9 @@ export const Register = () => {
      password : "",
  });
 
+ const navigate  = useNavigate();
+ const {storeTokenInLS} = useAuth();
+  
  const handleInput = (e) =>
  {
       console.log(e);
@@ -19,6 +27,42 @@ export const Register = () => {
         [name] : value,
       });
  }
+
+ const handleform = async (e) =>
+ {
+       e.preventDefault();
+       console.log(user);
+       try{
+       const response  = await fetch(`http://localhost:5000/api/auth/register`, {
+         method: "POST",
+         headers: {
+        "Content-Type": "application/json",
+         },
+         body: JSON.stringify(user),
+       });
+       const res_data = await response.json();
+       console.log("Res from server", res_data)
+      if(response.ok)
+        {
+           
+          storeTokenInLS(res_data.token);
+          setUser({ username : "",
+          email : " ",
+          phone : " ",
+          password : "",});
+          navigate("/Login");
+          toast.success(res_data.message);
+        }
+      else{
+        toast.error(res_data.extradetails ? res_data.extradetails : res_data.message);
+      }
+      }
+      catch(error)
+      {
+            console.log("register", error);
+      }
+
+ };
  
  
  
@@ -27,9 +71,9 @@ export const Register = () => {
     <>
       <section>
         <main>
-          <div className="section-registeration">
+          <div className="section-auth">
             <div className="container grid grid-two-cols">
-              <div className="registration-image">
+              <div className="auth-image">
                 <img
                   src={registerImage}
                   alt="A girl is trying to do registration"
@@ -37,10 +81,10 @@ export const Register = () => {
                   height="500"
                 />
               </div>
-              <div className="registration-form">
+              <div className="section-form">
                 <h1 className="main-heading mb-3">Registration Form</h1>
                 <br />
-                <form>
+                <form onSubmit={handleform}>
                   <div>
                     <label htmlFor="username">username</label>
                     <input
@@ -72,7 +116,7 @@ export const Register = () => {
                     <input
                       type="phone"
                       name="phone"
-                      placeholder="Phone number"
+                      placeholder="Phonenumber"
                       id="phone"
                       value = {user.phone}
                       onChange={handleInput}
